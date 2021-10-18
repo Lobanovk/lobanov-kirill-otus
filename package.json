@@ -1,0 +1,23 @@
+{
+  "name": "lobanov-kirill-otus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lobanovk/lobanov-kirill-otus.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lobanovk/lobanov-kirill-otus/issues"
+  },
+  "homepage": "https://github.com/Lobanovk/lobanov-kirill-otus#readme",
+  "devDependencies": {
+    "jest": "^27.3.0"
+  }
+}
