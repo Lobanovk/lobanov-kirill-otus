@@ -9,7 +9,7 @@ const getPath = (el) => {
           selector += `#${element.getAttribute(attribute)}`;
           parents.push(selector);
           element = element.parentElement;
-          continue loop;
+          break loop;
         } else if (attribute === "class") {
           const classesStr = element.getAttribute(attribute)?.replace(/^\b|\s/g, ".");
           if (classesStr) selector += classesStr;
