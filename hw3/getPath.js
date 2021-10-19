@@ -2,11 +2,14 @@ const getPath = (el) => {
   const getAllParents = (el) => {
     const parents = [];
     let element = el;
-    while (element.parentElement) {
+    loop: while (element.parentElement) {
       let selector = `${element.tagName}`;
       for (let attribute of element.getAttributeNames()) {
         if (attribute === "id") {
           selector += `#${element.getAttribute(attribute)}`;
+          parents.push(selector);
+          element = element.parentElement;
+          continue loop;
         } else if (attribute === "class") {
           const classesStr = element.getAttribute(attribute)?.replace(/^\b|\s/g, ".");
           if (classesStr) selector += classesStr;

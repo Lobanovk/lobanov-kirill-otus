@@ -8,11 +8,12 @@ test("should return uniq selector", () => {
     </div>
   </div>
   <div class="first">
-    <div class="content">  
+    <div id="content" class="content">  
     </div>
   </div>
   `;
   const element = document.querySelector("div.first:nth-child(2) div.content")
-  expect(document.querySelectorAll(getPath(element)).length).toBe(1);
-  expect(element).toMatchObject(document.querySelectorAll(getPath(element)[0]));
+  const path = getPath(element);
+  expect(document.querySelectorAll(path).length).toBe(1);
+  expect(element).toMatchObject(document.querySelectorAll(path)[0]);
 });
