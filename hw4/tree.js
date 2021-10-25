@@ -1,34 +1,31 @@
 const fsPromises = require("fs/promises");
 const path = require("path");
 
-const getTree = (_path) => {
-    const files = [];
-    const dirs = [_path];
-    const realPath = path.dirname(__dirname);
-    const helper = async (_path) => {
-        try {
-            const _files = await fsPromises.readdir(`${realPath}/${_path}`, { withFileTypes: true });
-            if (_files.length === 0) return;
-            for (const file of _files) {
-                if (file.isDirectory()) {
-                    dirs.push(`${_path}${file.name}`);
-                    await helper(`${_path}${file.name}/`);
-                }
-                if (file.isFile()) {
-                    files.push(`${_path}${file.name}`);
-                }
-            }
-        } catch (e) {
-            console.error("error", e);
-        }
-    }
 
-    helper(_path).then(() => {
-        console.log({
-            files,
-            dirs,
-        })
-    });
+const getTree = async (currentPath) => {
+    try {
+        const result = {
+          files: [],
+          dirs: [],
+        };
+        const resolvePath = path.resolve(currentPath);
+        const files = await fsPromises.readdir(resolvePath, { withFileTypes: true });
+        if (!files.length) return result;
+        for (const file of files) {
+            if (file.isDirectory()) {
+                result.dirs.push(`${currentPath}${file.name}`);
+                const res = await getTree(`${currentPath}${file.name}/`);
+                result.dirs = result.dirs.concat(res.dirs);
+                result.files = result.files.concat(res.files);
+            }
+            if (file.isFile()) {
+                result.files.push(`${currentPath}${file.name}`);
+            }
+        }
+        return result;
+    } catch (e) {
+        console.error("error", e);
+    }
 }
 
-getTree("hw4/");
+getTree(process.argv[process.argv.length - 1]).then(console.log);
