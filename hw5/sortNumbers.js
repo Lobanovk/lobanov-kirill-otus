@@ -39,7 +39,7 @@ const prepareSortedFiles = async () => {
   try {
     let part = 1;
     let start = 0;
-    const chunk = 100000 //TODO 1000000
+    const chunk = 2000000;
     let end = chunk;
     let lastElements = "";
     let lF = false;
@@ -82,7 +82,6 @@ const createReadableStream = (part) => {
 }
 
 const watchToStream = (stream) => {
-  let count = 0;
   let lastEl = null;
   return {
     resume: () => stream.resume(),
@@ -98,24 +97,14 @@ const watchToStream = (stream) => {
         if (numberStr[numberStr.length - 1] !== ";") {
           lastEl = numberChunks.pop();
         }
-        resolve({
-          status: count ? "update" : "start",
-          data: numberChunks.map(Number),
-        });
-        count++;
+        resolve(numberChunks.filter(Boolean).map(Number));
       });
       stream.on("end", () => {
         stream.close();
-        resolve({
-          status: "end",
-          data: []
-        });
+        resolve([]);
       });
       stream.on("close", () => {
-        resolve({
-          status: "close",
-          data: []
-        })
+        resolve([])
       })
     })
   }
@@ -135,9 +124,9 @@ const writeToOutput = async () => {
     while (true) {
       allLength = 0;
       const minimal = data.reduce((acc, item, index) => {
-        allLength += item.data.length;
-        if (item.data[0] !== undefined) {
-          acc[item.data[0]] = index;
+        allLength += item.length;
+        if (item[0] !== undefined) {
+          acc[item[0]] = index;
         }
         return acc;
       } ,{});
@@ -146,10 +135,10 @@ const writeToOutput = async () => {
       }
       const min = Math.min(...Object.keys(minimal).map(Number));
       writableStream.write(`${min};`)
-      if (data[minimal[min]]?.data?.length) {
+      if (data[minimal[min]]?.length) {
         const key = minimal[min];
-        data[key].data.shift();
-        if (!data[key].data.length) {
+        data[key].shift();
+        if (!data[key].length) {
           streams[key].resume();
           data[key] = await streams[key].getData();
         }

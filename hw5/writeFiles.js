@@ -17,7 +17,7 @@ const writeToFile = async () => {
 
 const createArrNumbers = () => {
   let str = "";
-  while (str.length < 1 * 1000000) { //TODO поменять на 100
+  while (str.length < 10 * 1000000) {
     str += `${randomInteger(1, 10999999)};`;
   }
   return str;
